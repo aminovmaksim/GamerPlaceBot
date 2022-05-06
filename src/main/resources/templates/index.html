@@ -74,7 +74,7 @@
     };
 
     const map = new mapboxgl.Map({
-        container: 'index.html',
+        container: 'map',
         style: 'mapbox://styles/aminovmaksim/cl2umusjc007d15mu12nzgfl5',
         center: [37.6, 55.75],
         zoom: 10.5
@@ -82,7 +82,7 @@
 
     // add markers to map
     for (const feature of geojson.features) {
-        // create a HTML element for each feature
+        // create an HTML element for each feature
         const el = document.createElement('div');
         el.className = 'marker';
 
