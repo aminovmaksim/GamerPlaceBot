@@ -74,7 +74,7 @@
     };
 
     const map = new mapboxgl.Map({
-        container: 'map',
+        container: 'index.html',
         style: 'mapbox://styles/aminovmaksim/cl2umusjc007d15mu12nzgfl5',
         center: [37.6, 55.75],
         zoom: 10.5
@@ -95,7 +95,7 @@
                         `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
                     )
             )
-            .addTo(map);
+            .addTo(index);
     }
 </script>
 </body>

@@ -10,6 +10,6 @@ public class BotController {
 
     @GetMapping("/clubs-map")
     public String clubsMap() {
-        return "map";
+        return "index";
     }
 }
