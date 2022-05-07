@@ -2,8 +2,11 @@ package com.devian.gamerplacebot.bot.adapter;
 
 import com.devian.gamerplacebot.bot.BotService;
 import com.devian.gamerplacebot.config.BotProperties;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.Update;
+import com.pengrad.telegrambot.request.GetWebhookInfo;
 import com.pengrad.telegrambot.request.SetWebhook;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ResourceUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -36,6 +40,7 @@ public class BotAdapterWebhookImpl {
     BotService botService;
     BotProperties botProperties;
     ApplicationContext context;
+    ObjectMapper objectMapper;
 
     @PostConstruct
     public void registerWebhook() throws FileNotFoundException {
@@ -49,7 +54,6 @@ public class BotAdapterWebhookImpl {
         log.info("Setting up webhook URL: {}", webhookUrl);
         var response = bot.execute(new SetWebhook()
                 .url(webhookUrl)
-                .certificate(cert)
                 .maxConnections(botProperties.getWebhookMaxConnections()));
         if (!response.isOk()) {
             log.error("Cannot register webhook {} : {}", response.errorCode(), response.description());
@@ -68,5 +72,14 @@ public class BotAdapterWebhookImpl {
             log.error("Update Listener exception", e);
             return ResponseEntity.internalServerError().build();
         }
+    }
+
+    @GetMapping(path = "/#{@botProperties.getToken()}/webhookInfo", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> getWebhookInfo() throws JsonProcessingException {
+        var response = bot.execute(new GetWebhookInfo());
+        if (response.isOk()) {
+            return ResponseEntity.ok(objectMapper.writeValueAsString(response.webhookInfo()));
+        }
+        return ResponseEntity.internalServerError().build();
     }
 }
