@@ -20,4 +20,8 @@ public class HandleResult {
     public static HandleResult empty() {
         return new HandleResult(null, new SendChatAction(0, ChatAction.choose_sticker));
     }
+
+    public static HandleResult create(State nextState, BaseRequest<?, ?> baseRequest) {
+        return new HandleResult(nextState, baseRequest);
+    }
 }

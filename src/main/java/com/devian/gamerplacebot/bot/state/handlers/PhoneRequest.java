@@ -3,15 +3,11 @@ package com.devian.gamerplacebot.bot.state.handlers;
 import com.devian.gamerplacebot.bot.state.State;
 import com.devian.gamerplacebot.bot.state.StateHandler;
 import com.devian.gamerplacebot.bot.state.model.HandleResult;
+import com.devian.gamerplacebot.bot.state.utils.KeyboardProvider;
 import com.devian.gamerplacebot.data.DataAccess;
 import com.devian.gamerplacebot.data.redis.entity.UserInfo;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
-import com.pengrad.telegrambot.model.WebAppInfo;
-import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
-import com.pengrad.telegrambot.model.request.InlineKeyboardMarkup;
-import com.pengrad.telegrambot.model.request.KeyboardButton;
-import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +15,10 @@ import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class PhoneRequestState implements StateHandler {
+public class PhoneRequest implements StateHandler {
 
     static String TEXT_MAIN = "Отлично, %s! Теперь приступим к работе ...";
     static String TEXT_TRY_AGAIN = "Мне все-таки нужен твой номер телефона 😔";
-    static String BUTTON_REQUEST_NUMBER = "Предоставить номер телефона";
 
     DataAccess dataAccess;
 
@@ -37,22 +32,11 @@ public class PhoneRequestState implements StateHandler {
                     .firstName(contact.firstName())
                     .lastName(contact.lastName())
                     .build());
-            return HandleResult.builder()
-                    .nextState(State.PHONE_REQUEST)
-                    .baseRequest(new SendMessage(userId, String.format(TEXT_MAIN, contact.firstName())).replyMarkup(
-                            new InlineKeyboardMarkup(
-                                    new InlineKeyboardButton("Карта").webApp(new WebAppInfo("http://localhost/bot/clubs-map"))
-                            )
-                    ))
-                    .build();
+            return HandleResult.create(State.MAIN_MENU, new SendMessage(userId, String.format(TEXT_MAIN, contact.firstName()))
+                    .replyMarkup(KeyboardProvider.mainMenu()));
         }
-        return HandleResult.builder()
-                .nextState(State.PHONE_REQUEST)
-                .baseRequest(new SendMessage(userId, TEXT_TRY_AGAIN).replyMarkup(new ReplyKeyboardMarkup(
-                        new KeyboardButton(BUTTON_REQUEST_NUMBER).requestContact(true))
-                        .oneTimeKeyboard(true)
-                        .resizeKeyboard(true)))
-                .build();
+        return HandleResult.create(State.PHONE_REQUEST, new SendMessage(userId, TEXT_TRY_AGAIN)
+                        .replyMarkup(KeyboardProvider.requestNumber()));
     }
 
     @Override

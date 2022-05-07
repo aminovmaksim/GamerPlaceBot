@@ -1,5 +1,6 @@
 package com.devian.gamerplacebot.bot.state;
 
+import com.devian.gamerplacebot.bot.state.utils.Buttons;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,20 @@ import java.util.Map;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public enum Command {
-    START("/start", State.INITIAL);
+
+    /* For BotFather
+     * start - Перезапустить бота
+     * menu - Перейти в главное меню
+     * book - Забронировать место в клубе
+     */
+
+    START("/start", State.INITIAL),
+    MENU("/menu", State.MAIN_MENU),
+    BOOK("/book", State.BOOKING_SELECT),
+
+    MENU_T(Buttons.MENU, State.MAIN_MENU),
+    BOOK_T(Buttons.BOOK, State.BOOKING_SELECT)
+    ;
 
     String commandText;
     State state;

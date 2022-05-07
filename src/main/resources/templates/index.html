@@ -4,9 +4,12 @@
     <meta charset="utf-8"/>
     <title>Demo: Add custom markers in Mapbox GL JS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
+
     <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet"/>
     <script src="https://api.tiles.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.js"></script>
     <link href="https://api.tiles.mapbox.com/mapbox-gl-js/v2.8.1/mapbox-gl.css" rel="stylesheet"/>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
     <style>
         body {
             margin: 0;
@@ -25,7 +28,7 @@
             background-size: cover;
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: 30%;
             cursor: pointer;
         }
 
@@ -52,22 +55,11 @@
                 'type': 'Feature',
                 'geometry': {
                     'type': 'Point',
-                    'coordinates': [-77.032, 38.913]
+                    'coordinates': [37.673, 55.694]
                 },
                 'properties': {
-                    'title': 'Mapbox',
-                    'description': 'Washington, D.C.'
-                }
-            },
-            {
-                'type': 'Feature',
-                'geometry': {
-                    'type': 'Point',
-                    'coordinates': [-122.414, 37.776]
-                },
-                'properties': {
-                    'title': 'Mapbox',
-                    'description': 'San Francisco, California'
+                    'title': 'Dream Team',
+                    'description': 'ТРЦ "Остров Мечты", 1 этаж'
                 }
             }
         ]
@@ -76,9 +68,14 @@
     const map = new mapboxgl.Map({
         container: 'map',
         style: 'mapbox://styles/aminovmaksim/cl2umusjc007d15mu12nzgfl5',
-        center: [37.6, 55.75],
-        zoom: 10.5
+        center: [37.65, 55.7],
+        zoom: 12
     });
+
+    function onPopupClick() {
+        window.Telegram.WebApp.sendData('data')
+        window.Telegram.WebApp.close()
+    }
 
     // add markers to map
     for (const feature of geojson.features) {
@@ -92,10 +89,13 @@
             .setPopup(
                 new mapboxgl.Popup({offset: 25}) // add popups
                     .setHTML(
-                        `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+                        `    <h3>${feature.properties.title}</h3>
+                            <p>${feature.properties.description}</p>
+                            <button id="popup" type="button" onclick="onPopupClick()">Выбрать</button>
+                        `
                     )
             )
-            .addTo(index);
+            .addTo(map);
     }
 </script>
 </body>

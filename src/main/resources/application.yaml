@@ -10,4 +10,9 @@ server:
 telegram:
   bot:
     token: ${TG_BOT_TOKEN}
+    webhook:
+      enabled: true
+      scheme: https
+      host: 45.8.230.135
+      maxConnections: 100
 # ---------- Telegram end ---------- #

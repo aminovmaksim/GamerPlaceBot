@@ -2,6 +2,7 @@ package com.devian.gamerplacebot.data.dao;
 
 import com.devian.gamerplacebot.bot.state.State;
 import com.devian.gamerplacebot.data.redis.RedisAccess;
+import com.devian.gamerplacebot.data.redis.entity.LastMessage;
 import com.devian.gamerplacebot.data.redis.entity.UserInfo;
 import com.devian.gamerplacebot.data.redis.entity.UserState;
 import lombok.AccessLevel;
@@ -44,9 +45,43 @@ public class UserDao {
         }
     }
 
+    /**
+     * Сохранение данных о пользователе
+     */
     public void setUserInfo(UserInfo info) {
         if (info != null) {
             redisAccess.userInfoRepo.save(info);
         }
+    }
+
+    /**
+     * Получение данных о пользователе
+     */
+    public UserInfo getUserInfo(Long id) {
+        var infoOpt = redisAccess.userInfoRepo.findById(id);
+        if (infoOpt.isEmpty()) {
+            return null;
+        }
+        return infoOpt.get();
+    }
+
+    /**
+     * Сохранение идентификатора последнего отправленного ботом сообщения в чат
+     */
+    public void setLastMessage(Long chatId, Integer messageId) {
+        if (messageId != null && chatId != null) {
+            redisAccess.lastMessageRepo.save(new LastMessage(chatId, messageId));
+        }
+    }
+
+    /**
+     * Получение идентификатора последнего отправленного ботом сообщения в чат
+     */
+    public Integer getLastMessage(Long chatId) {
+        var messageOpt = redisAccess.lastMessageRepo.findById(chatId);
+        if (messageOpt.isEmpty()) {
+            return null;
+        }
+        return messageOpt.get().getMessageId();
     }
 }
