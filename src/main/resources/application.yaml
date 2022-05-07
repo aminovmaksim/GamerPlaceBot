@@ -15,8 +15,9 @@ telegram:
   bot:
     token: ${TG_BOT_TOKEN}
     webhook:
-      enabled: true
+      enabled: ${TG_BOT_WEBHOOK_ENABLED}
       host: ${TG_BOT_HOST}
+      certificate: ${TG_BOT_CERT}
       maxConnections: ${TG_BOT_MAX_CONNECTIONS}
 # ---------- Telegram end ---------- #
 

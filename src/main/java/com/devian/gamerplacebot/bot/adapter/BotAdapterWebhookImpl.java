@@ -16,11 +16,13 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.io.FileNotFoundException;
 
 @Slf4j
 @RestController
@@ -36,16 +38,18 @@ public class BotAdapterWebhookImpl {
     ApplicationContext context;
 
     @PostConstruct
-    public void registerWebhook() {
+    public void registerWebhook() throws FileNotFoundException {
         var webhookUrl = new HttpUrl.Builder()
                 .scheme("https")
                 .host(botProperties.getWebhookHost())
                 .port(botProperties.getWebhookPort())
                 .addPathSegment(botProperties.getToken())
                 .build().url().toString();
+        var cert = ResourceUtils.getFile(botProperties.getCertificatePath());
         log.info("Setting up webhook URL: {}", webhookUrl);
         var response = bot.execute(new SetWebhook()
                 .url(webhookUrl)
+                .certificate(cert)
                 .maxConnections(botProperties.getWebhookMaxConnections()));
         if (!response.isOk()) {
             log.error("Cannot register webhook {} : {}", response.errorCode(), response.description());

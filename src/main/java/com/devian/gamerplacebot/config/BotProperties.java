@@ -25,4 +25,7 @@ public class BotProperties {
 
     @Value("${telegram.bot.webhook.maxConnections}")
     Integer webhookMaxConnections;
+
+    @Value("${telegram.bot.webhook.certificate}")
+    String certificatePath;
 }
