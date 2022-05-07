@@ -17,9 +17,6 @@ public class BotProperties {
     @Value("${telegram.bot.webhook.enabled}")
     Boolean webhookEnabled;
 
-    @Value("${telegram.bot.webhook.scheme}")
-    String webhookScheme;
-
     @Value("${telegram.bot.webhook.host}")
     String webhookHost;
 

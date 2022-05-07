@@ -38,7 +38,7 @@ public class BotAdapterWebhookImpl {
     @PostConstruct
     public void registerWebhook() {
         var webhookUrl = new HttpUrl.Builder()
-                .scheme(botProperties.getWebhookScheme())
+                .scheme("https")
                 .host(botProperties.getWebhookHost())
                 .port(botProperties.getWebhookPort())
                 .addPathSegment(botProperties.getToken())
