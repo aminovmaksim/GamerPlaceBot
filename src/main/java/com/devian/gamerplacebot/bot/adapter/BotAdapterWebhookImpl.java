@@ -54,6 +54,7 @@ public class BotAdapterWebhookImpl {
         log.info("Setting up webhook URL: {}", webhookUrl);
         var response = bot.execute(new SetWebhook()
                 .url(webhookUrl)
+                .certificate(cert)
                 .maxConnections(botProperties.getWebhookMaxConnections()));
         if (!response.isOk()) {
             log.error("Cannot register webhook {} : {}", response.errorCode(), response.description());
