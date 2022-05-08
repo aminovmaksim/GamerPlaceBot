@@ -5,7 +5,7 @@ spring:
     port: ${REDIS_PORT}
 ## ---------- Redis end ----------- ##
 server:
-  port: 8443
+  port: 443
   ssl:
     enabled: true
     key-alias: ${SERVER_SSL_KEY_ALIAS}
