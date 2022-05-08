@@ -48,7 +48,7 @@ public class BotAdapterWebhookImpl {
                 .scheme("https")
                 .host(botProperties.getWebhookHost())
                 .port(botProperties.getWebhookPort())
-                .addPathSegment(botProperties.getToken())
+                .addPathSegment("update")
                 .build().url().toString();
         var cert = ResourceUtils.getFile(botProperties.getCertificatePath());
         log.info("Setting up webhook URL: {}", webhookUrl);
