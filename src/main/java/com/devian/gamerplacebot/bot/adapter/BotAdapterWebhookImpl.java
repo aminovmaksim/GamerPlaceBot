@@ -64,7 +64,8 @@ public class BotAdapterWebhookImpl {
         log.info("Webhook successfully registered");
     }
 
-    @PostMapping(path = "/#{@botProperties.getToken()}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
+    //@PostMapping(path = "/#{@botProperties.getToken()}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> handleUpdate(@RequestBody Update update) {
         try {
             botService.handleUpdate(update);

@@ -12,7 +12,15 @@ server:
     key-store: ${SERVER_SSL_KEY_STORE}
     key-store-password: ${SERVER_SSL_KEY_STORE_PASS}
     key-store-type: PKCS12
+    protocol: TLS
     enabled-protocols: TLSv1.2
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: ${HOME}/logs
+      file-date-format: yyyy-MM-dd
+      prefix: access_log
+      suffix: .log
 # --------- Telegram begin --------- #
 telegram:
   bot:
