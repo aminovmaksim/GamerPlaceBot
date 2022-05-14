@@ -1,0 +1,44 @@
+spring:
+  ## ---------- Redis begin --------- ##
+  redis:
+    host: localhost
+    port: 6379
+## ---------- Redis end ----------- ##
+server:
+  port: 443
+  ssl:
+    enabled: false
+    key-alias:
+    key-store:
+    key-store-password:
+    key-store-type: PKCS12
+    protocol: TLS
+    enabled-protocols: TLSv1.2
+  tomcat:
+    accesslog:
+      enabled: true
+      directory: ${HOME}/logs
+      file-date-format: yyyy-MM-dd
+      prefix: access_log
+      suffix: .log
+# --------- Telegram begin --------- #
+telegram:
+  bot:
+    token: ${TG_BOT_TOKEN}
+    webhook:
+      enabled: false
+      host:
+      certificate:
+      maxConnections:
+# ---------- Telegram end ---------- #
+
+#  PUT THIS ENVIRONMENT VARIABLES ON YOUR MACHINE
+#
+#  export TG_BOT_TOKEN=""
+#  export TG_BOT_HOST=""
+#  export TG_BOT_MAX_CONNECTIONS="100"
+#  export REDIS_HOST="localhost"
+#  export REDIS_PORT="6379"
+#  export SERVER_SSL_KEY_ALIAS=""
+#  export SERVER_SSL_KEY_STORE=""
+#  export SERVER_SSL_KEY_STORE_PASS=""

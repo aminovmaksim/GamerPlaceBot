@@ -48,7 +48,7 @@ public class BotAdapterWebhookImpl {
                 .scheme("https")
                 .host(botProperties.getWebhookHost())
                 .port(botProperties.getWebhookPort())
-                .addPathSegment("update")
+                .addPathSegment(botProperties.getToken())
                 .build().url().toString();
         var cert = ResourceUtils.getFile(botProperties.getCertificatePath());
         log.info("Setting up webhook URL: {}", webhookUrl);
@@ -63,8 +63,7 @@ public class BotAdapterWebhookImpl {
         log.info("Webhook successfully registered");
     }
 
-    @PostMapping(path = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    //@PostMapping(path = "/#{@botProperties.getToken()}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(path = "/#{@botProperties.getToken()}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> handleUpdate(@RequestBody Update update) {
         try {
             botService.handleUpdate(update);
