@@ -1,9 +1,11 @@
 package com.devian.gamerplacebot.data.dao;
 
 import com.devian.gamerplacebot.bot.state.State;
+import com.devian.gamerplacebot.data.mapper.DatabaseMapper;
+import com.devian.gamerplacebot.data.model.UserInfo;
+import com.devian.gamerplacebot.data.postgres.PostgresAccess;
 import com.devian.gamerplacebot.data.redis.RedisAccess;
 import com.devian.gamerplacebot.data.redis.entity.LastMessage;
-import com.devian.gamerplacebot.data.redis.entity.UserInfo;
 import com.devian.gamerplacebot.data.redis.entity.UserState;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 public class UserDao {
 
     RedisAccess redisAccess;
+    PostgresAccess postgresAccess;
+    DatabaseMapper databaseMapper;
 
     /**
      * Получение состояния пользователя
@@ -50,7 +54,7 @@ public class UserDao {
      */
     public void setUserInfo(UserInfo info) {
         if (info != null) {
-            redisAccess.userInfoRepo.save(info);
+            postgresAccess.userRepo.save(databaseMapper.userInfo(info));
         }
     }
 
@@ -58,11 +62,11 @@ public class UserDao {
      * Получение данных о пользователе
      */
     public UserInfo getUserInfo(Long id) {
-        var infoOpt = redisAccess.userInfoRepo.findById(id);
+        var infoOpt = postgresAccess.userRepo.findById(id);
         if (infoOpt.isEmpty()) {
             return null;
         }
-        return infoOpt.get();
+        return databaseMapper.userInfo(infoOpt.get());
     }
 
     /**

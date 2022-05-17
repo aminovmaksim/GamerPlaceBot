@@ -9,10 +9,10 @@ public interface StateHandler {
     /**
      * Обработка входящего сообщения от пользователя
      */
-    HandleResult handle(Long userId, Message message);
+    HandleResult handle(Message message);
 
     /**
      * Обработка входящего Callback от пользователя
      */
-    HandleResult handle(Long userId, CallbackQuery callback);
+    HandleResult handle(CallbackQuery callback);
 }

@@ -5,7 +5,7 @@ import com.devian.gamerplacebot.bot.state.StateHandler;
 import com.devian.gamerplacebot.bot.state.model.HandleResult;
 import com.devian.gamerplacebot.bot.state.utils.KeyboardProvider;
 import com.devian.gamerplacebot.data.DataAccess;
-import com.devian.gamerplacebot.data.redis.entity.UserInfo;
+import com.devian.gamerplacebot.data.model.UserInfo;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.request.SendMessage;
@@ -23,7 +23,8 @@ public class PhoneRequest implements StateHandler {
     DataAccess dataAccess;
 
     @Override
-    public HandleResult handle(Long userId, Message message) {
+    public HandleResult handle(Message message) {
+        var userId = message.from().id();
         var contact = message.contact();
         if (contact != null) {
             dataAccess.userDao.setUserInfo(UserInfo.builder()
@@ -32,15 +33,15 @@ public class PhoneRequest implements StateHandler {
                     .firstName(contact.firstName())
                     .lastName(contact.lastName())
                     .build());
-            return HandleResult.create(State.MAIN_MENU, new SendMessage(userId, String.format(TEXT_MAIN, contact.firstName()))
+            return HandleResult.create(userId, State.MAIN_MENU, new SendMessage(userId, String.format(TEXT_MAIN, contact.firstName()))
                     .replyMarkup(KeyboardProvider.mainMenu()));
         }
-        return HandleResult.create(State.PHONE_REQUEST, new SendMessage(userId, TEXT_TRY_AGAIN)
+        return HandleResult.create(userId, State.PHONE_REQUEST, new SendMessage(userId, TEXT_TRY_AGAIN)
                         .replyMarkup(KeyboardProvider.requestNumber()));
     }
 
     @Override
-    public HandleResult handle(Long userId, CallbackQuery callback) {
+    public HandleResult handle(CallbackQuery callback) {
         return HandleResult.empty();
     }
 }

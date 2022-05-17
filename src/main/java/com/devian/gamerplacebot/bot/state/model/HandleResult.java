@@ -14,14 +14,15 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class HandleResult {
 
+    Long userId;
     State nextState;
     BaseRequest<?, ?> baseRequest;
 
     public static HandleResult empty() {
-        return new HandleResult(null, new SendChatAction(0, ChatAction.choose_sticker));
+        return new HandleResult(0L, null, new SendChatAction(0, ChatAction.choose_sticker));
     }
 
-    public static HandleResult create(State nextState, BaseRequest<?, ?> baseRequest) {
-        return new HandleResult(nextState, baseRequest);
+    public static HandleResult create(Long userId, State nextState, BaseRequest<?, ?> baseRequest) {
+        return new HandleResult(userId, nextState, baseRequest);
     }
 }

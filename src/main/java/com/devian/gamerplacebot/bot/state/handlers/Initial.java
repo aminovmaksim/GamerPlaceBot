@@ -22,18 +22,19 @@ public class Initial implements StateHandler {
     DataAccess dataAccess;
 
     @Override
-    public HandleResult handle(Long userId, Message message) {
+    public HandleResult handle(Message message) {
+        var userId = message.from().id();
         var userInfo = dataAccess.userDao.getUserInfo(userId);
         if (userInfo != null && userInfo.getPhoneNumber() != null) {
-            return HandleResult.create(State.MAIN_MENU, new SendMessage(userId, String.format(TEXT_USER_EXIST, userInfo.getFirstName()))
+            return HandleResult.create(userId, State.MAIN_MENU, new SendMessage(userId, String.format(TEXT_USER_EXIST, userInfo.getFirstName()))
                     .replyMarkup(KeyboardProvider.mainMenu()));
         }
-        return HandleResult.create(State.PHONE_REQUEST, new SendMessage(userId, TEXT_MAIN)
+        return HandleResult.create(userId, State.PHONE_REQUEST, new SendMessage(userId, TEXT_MAIN)
                         .replyMarkup(KeyboardProvider.requestNumber()));
     }
 
     @Override
-    public HandleResult handle(Long userId, CallbackQuery callback) {
+    public HandleResult handle(CallbackQuery callback) {
         return HandleResult.empty();
     }
 }

@@ -1,27 +1,30 @@
-package com.devian.gamerplacebot.data.redis.entity;
+package com.devian.gamerplacebot.data.postgres.entity;
 
+import com.devian.gamerplacebot.bot.state.State;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.redis.core.RedisHash;
 
-import java.io.Serializable;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Data
+@Entity
 @Builder
+@Table(name = "users")
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash("user-info")
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserInfo implements Serializable {
+public class User {
 
     @Id
     Long id;
     String phoneNumber;
     String firstName;
     String lastName;
+    State lastSavedState;
 }

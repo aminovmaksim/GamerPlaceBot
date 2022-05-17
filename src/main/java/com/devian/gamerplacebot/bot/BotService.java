@@ -3,8 +3,10 @@ package com.devian.gamerplacebot.bot;
 import com.devian.gamerplacebot.bot.state.Command;
 import com.devian.gamerplacebot.bot.state.StateHandlerProvider;
 import com.devian.gamerplacebot.bot.state.model.HandleResult;
-import com.devian.gamerplacebot.data.dao.UserDao;
+import com.devian.gamerplacebot.data.DataAccess;
 import com.pengrad.telegrambot.TelegramBot;
+import com.pengrad.telegrambot.model.CallbackQuery;
+import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.response.SendResponse;
 import lombok.AccessLevel;
@@ -20,33 +22,44 @@ import org.springframework.stereotype.Service;
 public class BotService {
 
     TelegramBot bot;
-    UserDao userDao;
+    DataAccess dataAccess;
     StateHandlerProvider stateProvider;
 
     public void handleUpdate(Update update) {
-        var userId = 0L;
         var handleResult = HandleResult.empty();
-        var message = update.message();
-        if (message != null) {
-            userId = message.from().id();
-            var command = Command.of(message.text());
-            var state = command != null ? command.getState() : userDao.getState(userId);
-            handleResult = stateProvider.getHandler(state).handle(userId, message);
-            log.info("User {} (state: {}) - {}", userId, state, message.text());
+        // Пришло новое сообщение
+        if (update.message() != null) {
+            handleResult = handleMessage(update.message());
         }
-        var callback = update.callbackQuery();
-        if (callback != null) {
-            userId = callback.from().id();
-            var state = userDao.getState(userId);
-            handleResult = stateProvider.getHandler(state).handle(userId, callback);
+        // Пришел callback с клавиатуры
+        if (update.callbackQuery() != null) {
+            handleResult = handleCallback(update.callbackQuery());
         }
         var response = bot.execute(handleResult.getBaseRequest());
+
+        // Сохраним идентификатор последнего отправленного сообщения
         if (response instanceof SendResponse) {
             var responseMessage = ((SendResponse) response).message();
             if (responseMessage != null) {
-                userDao.setLastMessage(userId, responseMessage.messageId());
+                dataAccess.userDao.setLastMessage(handleResult.getUserId(), responseMessage.messageId());
             }
         }
-        userDao.setState(userId, handleResult.getNextState());
+
+        // Обновим статус пользователя
+        dataAccess.userDao.setState(handleResult.getUserId(), handleResult.getNextState());
+    }
+
+    private HandleResult handleMessage(Message message) {
+        var userId = message.from().id();
+        var command = Command.of(message.text());
+        var state = command != null ? command.getState() : dataAccess.userDao.getState(userId);
+        log.info("Message from user {} (state: {}) - {}", userId, state, message.text());
+        return stateProvider.getHandler(state).handle(message);
+    }
+
+    private HandleResult handleCallback(CallbackQuery callbackQuery) {
+        var userId = callbackQuery.from().id();
+        var state = dataAccess.userDao.getState(userId);
+        return stateProvider.getHandler(state).handle(callbackQuery);
     }
 }

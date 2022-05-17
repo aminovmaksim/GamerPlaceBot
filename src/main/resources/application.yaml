@@ -1,11 +1,21 @@
 spring:
-## ---------- Redis begin --------- ##
+  ## ---------- Redis begin --------- ##
   redis:
     host: ${REDIS_HOST}
     port: ${REDIS_PORT}
-## ---------- Redis end ----------- ##
+  ## ---------- Redis end ----------- ##
+  ## ---------- Postgres begin --------- ##
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://${PG_HOST}:${PG_PORT}/${PG_DB}
+    username: ${PG_USERNAME}
+    password: ${PG_PASSWORD}
+  ## ---------- Postgres end ----------- ##
 server:
-  port: 443
+  port: 80
   ssl:
     enabled: true
     key-alias: ${SERVER_SSL_KEY_ALIAS}
@@ -37,6 +47,11 @@ telegram:
 #  export TG_BOT_TOKEN=""
 #  export TG_BOT_HOST=""
 #  export TG_BOT_MAX_CONNECTIONS="100"
+#  export PG_HOST="localhost"
+#  export PG_PORT="5432"
+#  export PG_DB=""
+#  export PG_USERNAME=""
+#  export PG_PASSWORD=""
 #  export REDIS_HOST="localhost"
 #  export REDIS_PORT="6379"
 #  export SERVER_SSL_KEY_ALIAS=""

@@ -3,9 +3,19 @@ spring:
   redis:
     host: localhost
     port: 6379
-## ---------- Redis end ----------- ##
+  ## ---------- Redis end ----------- ##
+  ## ---------- Postgres begin --------- ##
+  jpa:
+    hibernate:
+      ddl-auto: update
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/main
+    username: admin
+    password: changeit
+  ## ---------- Postgres end ----------- ##
 server:
-  port: 443
+  port: 80
   ssl:
     enabled: false
     key-alias:
@@ -14,13 +24,6 @@ server:
     key-store-type: PKCS12
     protocol: TLS
     enabled-protocols: TLSv1.2
-  tomcat:
-    accesslog:
-      enabled: true
-      directory: ${HOME}/logs
-      file-date-format: yyyy-MM-dd
-      prefix: access_log
-      suffix: .log
 # --------- Telegram begin --------- #
 telegram:
   bot:

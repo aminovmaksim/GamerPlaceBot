@@ -23,23 +23,24 @@ public class BookingSelect implements StateHandler {
     DataAccess dataAccess;
 
     @Override
-    public HandleResult handle(Long userId, Message message) {
+    public HandleResult handle(Message message) {
+        var userId = message.from().id();
         var text = message.text();
         if (ClubUtils.isValidId(text)) {
-            return HandleResult.create(State.CLUB_SELECTED, new SendMessage(userId, String.format(TEXT_SELECTED, text))
+            return HandleResult.create(userId, State.CLUB_SELECTED, new SendMessage(userId, String.format(TEXT_SELECTED, text))
                     .replyMarkup(KeyboardProvider.confirmSelectedClub()));
         }
         var mapData = message.webAppData();
         if (mapData != null) {
-            return HandleResult.create(State.CLUB_SELECTED, new SendMessage(userId, String.format(TEXT_SELECTED, mapData.data()))
+            return HandleResult.create(userId, State.CLUB_SELECTED, new SendMessage(userId, String.format(TEXT_SELECTED, mapData.data()))
                     .replyMarkup(KeyboardProvider.confirmSelectedClub()));
         }
-        return HandleResult.create(State.BOOKING_SELECT, new SendMessage(userId, TEXT_BOOK)
+        return HandleResult.create(userId, State.BOOKING_SELECT, new SendMessage(userId, TEXT_BOOK)
                 .replyMarkup(KeyboardProvider.map()));
     }
 
     @Override
-    public HandleResult handle(Long userId, CallbackQuery callback) {
+    public HandleResult handle(CallbackQuery callback) {
         return HandleResult.empty();
     }
 }

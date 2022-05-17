@@ -21,13 +21,14 @@ public class MainMenu implements StateHandler {
     DataAccess dataAccess;
 
     @Override
-    public HandleResult handle(Long userId, Message message) {
-        return HandleResult.create(State.MAIN_MENU, new SendMessage(userId, TEXT_RETRY)
+    public HandleResult handle(Message message) {
+        var userId = message.from().id();
+        return HandleResult.create(userId, State.MAIN_MENU, new SendMessage(userId, TEXT_RETRY)
                 .replyMarkup(KeyboardProvider.mainMenu()));
     }
 
     @Override
-    public HandleResult handle(Long userId, CallbackQuery callback) {
+    public HandleResult handle(CallbackQuery callback) {
         return HandleResult.empty();
     }
 }
