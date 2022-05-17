@@ -35,16 +35,7 @@ public class BotService {
         if (update.callbackQuery() != null) {
             handleResult = handleCallback(update.callbackQuery());
         }
-        var response = bot.execute(handleResult.getBaseRequest());
-
-        // Сохраним идентификатор последнего отправленного сообщения
-        if (response instanceof SendResponse) {
-            var responseMessage = ((SendResponse) response).message();
-            if (responseMessage != null) {
-                dataAccess.userDao.setLastMessage(handleResult.getUserId(), responseMessage.messageId());
-            }
-        }
-
+        executeRequests(handleResult);
         // Обновим статус пользователя
         dataAccess.userDao.setState(handleResult.getUserId(), handleResult.getNextState());
     }
@@ -61,5 +52,18 @@ public class BotService {
         var userId = callbackQuery.from().id();
         var state = dataAccess.userDao.getState(userId);
         return stateProvider.getHandler(state).handle(callbackQuery);
+    }
+
+    private void executeRequests(HandleResult handleResult) {
+        handleResult.getBaseRequests().forEach(rq -> {
+            var response = bot.execute(rq);
+            // Сохраним идентификатор последнего отправленного сообщения, если было отправлено сообщение
+            if (response instanceof SendResponse) {
+                var responseMessage = ((SendResponse) response).message();
+                if (responseMessage != null) {
+                    dataAccess.userDao.setLastMessage(handleResult.getUserId(), responseMessage.messageId());
+                }
+            }
+        });
     }
 }

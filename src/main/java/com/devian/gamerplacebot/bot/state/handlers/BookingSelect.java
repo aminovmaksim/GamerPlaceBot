@@ -8,6 +8,7 @@ import com.devian.gamerplacebot.data.DataAccess;
 import com.devian.gamerplacebot.utils.ClubUtils;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.request.BaseRequest;
 import com.pengrad.telegrambot.request.SendMessage;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,20 +28,27 @@ public class BookingSelect implements StateHandler {
         var userId = message.from().id();
         var text = message.text();
         if (ClubUtils.isValidId(text)) {
-            return HandleResult.create(userId, State.CLUB_SELECTED, new SendMessage(userId, String.format(TEXT_SELECTED, text))
-                    .replyMarkup(KeyboardProvider.confirmSelectedClub()));
+            return HandleResult.create(userId, State.CLUB_SELECTED, smSelected(userId, text));
         }
         var mapData = message.webAppData();
         if (mapData != null) {
-            return HandleResult.create(userId, State.CLUB_SELECTED, new SendMessage(userId, String.format(TEXT_SELECTED, mapData.data()))
-                    .replyMarkup(KeyboardProvider.confirmSelectedClub()));
+            return HandleResult.create(userId, State.CLUB_SELECTED, smSelected(userId, mapData.data()));
         }
-        return HandleResult.create(userId, State.BOOKING_SELECT, new SendMessage(userId, TEXT_BOOK)
-                .replyMarkup(KeyboardProvider.map()));
+        return HandleResult.create(userId, State.BOOKING_SELECT, smSelect(userId));
     }
 
     @Override
     public HandleResult handle(CallbackQuery callback) {
         return HandleResult.empty();
+    }
+
+    public static BaseRequest<?, ?> smSelect(Long userId) {
+        return new SendMessage(userId, TEXT_BOOK)
+                .replyMarkup(KeyboardProvider.map());
+    }
+
+    public static BaseRequest<?, ?> smSelected(Long userId, String clubInfo) {
+        return new SendMessage(userId, String.format(TEXT_SELECTED, clubInfo))
+                .replyMarkup(KeyboardProvider.confirmSelectedClub());
     }
 }

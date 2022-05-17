@@ -7,6 +7,7 @@ import com.devian.gamerplacebot.bot.state.utils.KeyboardProvider;
 import com.devian.gamerplacebot.data.DataAccess;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
+import com.pengrad.telegrambot.request.DeleteMessage;
 import com.pengrad.telegrambot.request.EditMessageReplyMarkup;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -36,8 +37,7 @@ public class ClubSelected implements StateHandler {
                         .replyMarkup(KeyboardProvider.confirmSelectedClub_Correct()));
             }
             if (CHANGE.equals(callback.data())) {
-                return HandleResult.create(userId, State.CLUB_SELECTED, new EditMessageReplyMarkup(userId, lastMessageId)
-                        .replyMarkup(KeyboardProvider.confirmSelectedClub_Change()));
+                return HandleResult.create(userId, State.BOOKING_SELECT, new DeleteMessage(userId, lastMessageId));
             }
         }
         return HandleResult.empty();

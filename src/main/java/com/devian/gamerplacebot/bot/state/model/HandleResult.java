@@ -9,6 +9,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Collections;
+import java.util.List;
+
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -16,13 +19,18 @@ public class HandleResult {
 
     Long userId;
     State nextState;
-    BaseRequest<?, ?> baseRequest;
+    List<BaseRequest<?, ?>> baseRequests;
 
     public static HandleResult empty() {
-        return new HandleResult(0L, null, new SendChatAction(0, ChatAction.choose_sticker));
+        return create(0L, null, new SendChatAction(0, ChatAction.choose_sticker));
     }
 
     public static HandleResult create(Long userId, State nextState, BaseRequest<?, ?> baseRequest) {
-        return new HandleResult(userId, nextState, baseRequest);
+        return new HandleResult(userId, nextState, Collections.singletonList(baseRequest));
+    }
+
+    public HandleResult addRequest(BaseRequest<?, ?> baseRequest) {
+        this.baseRequests.add(baseRequest);
+        return this;
     }
 }
