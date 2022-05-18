@@ -48,22 +48,27 @@
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiYW1pbm92bWFrc2ltIiwiYSI6ImNsMnVsdWJ2MTAzOTUzY21wYmNiMTY0YjAifQ.Ix2FLFm4DYhPx7P7JLfm1A';
 
-    const geojson = {
-        'type': 'FeatureCollection',
-        'features': [
+    const xmlHttp = new XMLHttpRequest()
+    xmlHttp.open("GET", "http://devian-server001.ru/api/clubs", false)
+    xmlHttp.send()
+    let clubs = JSON.parse(xmlHttp.responseText)
+
+    let features = []
+    for (let i = 0; i < clubs.length; i++) {
+        features.push(
             {
                 'type': 'Feature',
                 'geometry': {
                     'type': 'Point',
-                    'coordinates': [37.673, 55.694]
+                    'coordinates': [clubs[i].longitude, clubs[i].latitude]
                 },
                 'properties': {
-                    'title': 'Dream Team',
-                    'description': 'ТРЦ "Остров Мечты", 1 этаж'
+                    'id': clubs[i].id,
+                    'title': clubs[i].name,
+                    'description': clubs[i].address
                 }
-            }
-        ]
-    };
+            })
+    }
 
     const map = new mapboxgl.Map({
         container: 'map',
@@ -72,18 +77,9 @@
         zoom: 12
     });
 
-    function onPopupClick() {
-        window.Telegram.WebApp.sendData('data')
-        window.Telegram.WebApp.close()
-    }
-
-    // add markers to map
-    for (const feature of geojson.features) {
-        // create an HTML element for each feature
+    for (const feature of features) {
         const el = document.createElement('div');
         el.className = 'marker';
-
-        // make a marker for each feature and add it to the map
         new mapboxgl.Marker(el)
             .setLngLat(feature.geometry.coordinates)
             .setPopup(
@@ -91,11 +87,17 @@
                     .setHTML(
                         `    <h3>${feature.properties.title}</h3>
                             <p>${feature.properties.description}</p>
-                            <button id="popup" type="button" onclick="onPopupClick()">Выбрать</button>
+                            <button id="popup" type="button" onclick="onPopupClick(${feature.properties.id})">Выбрать</button>
                         `
                     )
             )
             .addTo(map);
+    }
+
+    function onPopupClick(id) {
+        console.log('Clicked ' + id)
+        window.Telegram.WebApp.sendData(id.toString())
+        window.Telegram.WebApp.close()
     }
 </script>
 </body>
