@@ -8,7 +8,6 @@ import com.pengrad.telegrambot.model.request.ReplyKeyboardMarkup;
 
 import static com.devian.gamerplacebot.bot.state.utils.Buttons.BOOK;
 import static com.devian.gamerplacebot.bot.state.utils.Buttons.CHANGE;
-import static com.devian.gamerplacebot.bot.state.utils.Buttons.CHANGE_OK;
 import static com.devian.gamerplacebot.bot.state.utils.Buttons.CORRECT;
 import static com.devian.gamerplacebot.bot.state.utils.Buttons.CORRECT_OK;
 import static com.devian.gamerplacebot.bot.state.utils.Buttons.MAP;
@@ -46,12 +45,6 @@ public class KeyboardProvider {
         return new InlineKeyboardMarkup(
                 new InlineKeyboardButton(CORRECT_OK).callbackData(CORRECT),
                 new InlineKeyboardButton(CHANGE).callbackData(CHANGE));
-    }
-
-    public static InlineKeyboardMarkup confirmSelectedClub_Change() {
-        return new InlineKeyboardMarkup(
-                new InlineKeyboardButton(CORRECT).callbackData(CORRECT),
-                new InlineKeyboardButton(CHANGE_OK).callbackData(CHANGE));
     }
 
     private static ReplyKeyboardMarkup reply(ReplyKeyboardMarkup keyboard) {

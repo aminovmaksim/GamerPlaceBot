@@ -1,5 +1,6 @@
 package com.devian.gamerplacebot.bot.state.handlers;
 
+import com.devian.gamerplacebot.bot.model.Intent;
 import com.devian.gamerplacebot.bot.state.State;
 import com.devian.gamerplacebot.bot.state.StateHandler;
 import com.devian.gamerplacebot.bot.state.model.HandleResult;
@@ -30,15 +31,14 @@ public class ClubSelected implements StateHandler {
     @Override
     public HandleResult handle(CallbackQuery callback) {
         var userId = callback.from().id();
-        var lastMessageId = dataAccess.userDao.getLastMessage(userId);
-        if (lastMessageId != null) {
+        var messageId = callback.message().messageId();
+        if (messageId != null) {
             if (CORRECT.equals(callback.data())) {
-                return HandleResult.create(userId, State.CLUB_SELECTED, new EditMessageReplyMarkup(userId, lastMessageId)
-                        .replyMarkup(KeyboardProvider.confirmSelectedClub_Correct()));
+                return HandleResult.create(userId, State.CLUB_SELECTED, new Intent(new EditMessageReplyMarkup(userId, messageId)
+                        .replyMarkup(KeyboardProvider.confirmSelectedClub_Correct())));
             }
             if (CHANGE.equals(callback.data())) {
-                return HandleResult.create(userId, State.BOOKING_SELECT, new DeleteMessage(userId, lastMessageId))
-                        .addRequest(BookingSelect.smSelect(userId));
+                return HandleResult.create(userId, State.BOOKING_SELECT, new Intent(new DeleteMessage(userId, messageId), BookingSelect.smSelect(userId)));
             }
         }
         return HandleResult.empty();

@@ -1,5 +1,6 @@
 package com.devian.gamerplacebot.bot.state.handlers;
 
+import com.devian.gamerplacebot.bot.model.Intent;
 import com.devian.gamerplacebot.bot.state.State;
 import com.devian.gamerplacebot.bot.state.StateHandler;
 import com.devian.gamerplacebot.bot.state.model.HandleResult;
@@ -28,13 +29,13 @@ public class BookingSelect implements StateHandler {
         var userId = message.from().id();
         var text = message.text();
         if (ClubUtils.isValidId(text)) {
-            return HandleResult.create(userId, State.CLUB_SELECTED, smSelected(userId, text));
+            return HandleResult.create(userId, State.CLUB_SELECTED, new Intent(smSelected(userId, text)));
         }
         var mapData = message.webAppData();
         if (mapData != null) {
-            return HandleResult.create(userId, State.CLUB_SELECTED, smSelected(userId, mapData.data()));
+            return HandleResult.create(userId, State.CLUB_SELECTED, new Intent(smSelected(userId, mapData.data())));
         }
-        return HandleResult.create(userId, State.BOOKING_SELECT, smSelect(userId));
+        return HandleResult.create(userId, State.BOOKING_SELECT, new Intent(smSelect(userId)));
     }
 
     @Override

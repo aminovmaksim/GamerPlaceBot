@@ -8,7 +8,6 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.model.CallbackQuery;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
-import com.pengrad.telegrambot.response.SendResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -55,15 +54,6 @@ public class BotService {
     }
 
     private void executeRequests(HandleResult handleResult) {
-        handleResult.getBaseRequests().forEach(rq -> {
-            var response = bot.execute(rq);
-            // Сохраним идентификатор последнего отправленного сообщения, если было отправлено сообщение
-            if (response instanceof SendResponse) {
-                var responseMessage = ((SendResponse) response).message();
-                if (responseMessage != null) {
-                    dataAccess.userDao.setLastMessage(handleResult.getUserId(), responseMessage.messageId());
-                }
-            }
-        });
+        handleResult.getIntent().executeAll(bot);
     }
 }

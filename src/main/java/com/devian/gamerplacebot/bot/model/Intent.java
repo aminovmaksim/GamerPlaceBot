@@ -20,11 +20,11 @@ public class Intent {
         return this;
     }
 
-    public Integer executeAll(TelegramBot bot) {
-        return 0;
+    public void executeAll(TelegramBot bot) {
+        requests.forEach(baseRequest -> execute(baseRequest, bot));
     }
 
     private void execute(BaseRequest<?, ?> request, TelegramBot bot) {
-        var response = bot.execute(request);
+        bot.execute(request);
     }
 }

@@ -1,5 +1,6 @@
 package com.devian.gamerplacebot.bot.state.handlers;
 
+import com.devian.gamerplacebot.bot.model.Intent;
 import com.devian.gamerplacebot.bot.state.State;
 import com.devian.gamerplacebot.bot.state.StateHandler;
 import com.devian.gamerplacebot.bot.state.model.HandleResult;
@@ -26,11 +27,11 @@ public class Initial implements StateHandler {
         var userId = message.from().id();
         var userInfo = dataAccess.userDao.getUserInfo(userId);
         if (userInfo != null && userInfo.getPhoneNumber() != null) {
-            return HandleResult.create(userId, State.MAIN_MENU, new SendMessage(userId, String.format(TEXT_USER_EXIST, userInfo.getFirstName()))
-                    .replyMarkup(KeyboardProvider.mainMenu()));
+            return HandleResult.create(userId, State.MAIN_MENU, new Intent(new SendMessage(userId, String.format(TEXT_USER_EXIST, userInfo.getFirstName()))
+                    .replyMarkup(KeyboardProvider.mainMenu())));
         }
-        return HandleResult.create(userId, State.PHONE_REQUEST, new SendMessage(userId, TEXT_MAIN)
-                        .replyMarkup(KeyboardProvider.requestNumber()));
+        return HandleResult.create(userId, State.PHONE_REQUEST, new Intent(new SendMessage(userId, TEXT_MAIN)
+                        .replyMarkup(KeyboardProvider.requestNumber())));
     }
 
     @Override
