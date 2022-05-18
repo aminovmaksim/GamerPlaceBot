@@ -17,7 +17,7 @@ spring:
 server:
   port: 80
   ssl:
-    enabled: true
+    enabled: ${SERVER_SSL_ENABLED}
     key-alias: ${SERVER_SSL_KEY_ALIAS}
     key-store: ${SERVER_SSL_KEY_STORE}
     key-store-password: ${SERVER_SSL_KEY_STORE_PASS}
