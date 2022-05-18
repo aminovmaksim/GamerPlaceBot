@@ -1,5 +1,6 @@
 package com.devian.gamerplacebot.data;
 
+import com.devian.gamerplacebot.data.dao.ClubDao;
 import com.devian.gamerplacebot.data.dao.UserDao;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -12,4 +13,5 @@ import org.springframework.stereotype.Component;
 public class DataAccess {
 
     UserDao userDao;
+    ClubDao clubDao;
 }

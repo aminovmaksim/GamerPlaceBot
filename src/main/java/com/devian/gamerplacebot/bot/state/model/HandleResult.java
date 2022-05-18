@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,7 +27,9 @@ public class HandleResult {
     }
 
     public static HandleResult create(Long userId, State nextState, BaseRequest<?, ?> baseRequest) {
-        return new HandleResult(userId, nextState, Collections.singletonList(baseRequest));
+        var baseRequests = new ArrayList<BaseRequest<?, ?>>();
+        baseRequests.add(baseRequest);
+        return new HandleResult(userId, nextState, baseRequests);
     }
 
     public HandleResult addRequest(BaseRequest<?, ?> baseRequest) {

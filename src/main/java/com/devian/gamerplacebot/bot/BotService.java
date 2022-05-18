@@ -44,7 +44,7 @@ public class BotService {
         var userId = message.from().id();
         var command = Command.of(message.text());
         var state = command != null ? command.getState() : dataAccess.userDao.getState(userId);
-        log.info("Message from user {} (state: {}) - {}", userId, state, message.text());
+        //log.info("Message from user {} (state: {}) - {}", userId, state, message.text());
         return stateProvider.getHandler(state).handle(message);
     }
 

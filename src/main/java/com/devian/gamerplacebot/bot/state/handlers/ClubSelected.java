@@ -37,7 +37,8 @@ public class ClubSelected implements StateHandler {
                         .replyMarkup(KeyboardProvider.confirmSelectedClub_Correct()));
             }
             if (CHANGE.equals(callback.data())) {
-                return HandleResult.create(userId, State.BOOKING_SELECT, new DeleteMessage(userId, lastMessageId));
+                return HandleResult.create(userId, State.BOOKING_SELECT, new DeleteMessage(userId, lastMessageId))
+                        .addRequest(BookingSelect.smSelect(userId));
             }
         }
         return HandleResult.empty();
